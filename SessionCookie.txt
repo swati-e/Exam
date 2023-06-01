@@ -1,0 +1,132 @@
+ login.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form action="LoginServlet" method="post">
+        <label for="uname">Username:</label>
+        <input type="text" name="uname" required><br><br>
+        <label for="pass">Password:</label>
+        <input type="password" name="pass" required><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+
+LoginServlet.java
+package com.example.servlets;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String username = request.getParameter("uname");
+        String password = request.getParameter("pass");
+
+        PrintWriter out = response.getWriter();
+
+        if (username.equals("java") && password.equals("pvg")) {
+            Cookie authCookie = new Cookie("auth", username);
+            authCookie.setMaxAge(600); // 10 minutes
+            response.addCookie(authCookie);
+            response.sendRedirect("home.jsp");
+        } else {
+            response.sendRedirect("login.html?error=true");
+        }
+    }
+}
+
+
+home.jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Home Page</h1>
+    <p>You have successfully logged in.</p>
+    <p>Your session is set to expire in 10 minutes.</p>
+    <p>Try reloading the page after 10 minutes.</p>
+    <form action="LogoutServlet" method="post">
+        <input type="submit" value="Logout">
+    </form>
+</body>
+</html>
+
+
+LogoutServlet.javapackage com.example.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/LogoutServlet")
+public class LogoutServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Cookie authCookie = new Cookie("auth", "");
+        authCookie.setMaxAge(0);
+        response.addCookie(authCookie);
+        response.sendRedirect("logout.html");
+    }
+}
+
+
+
+logout.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Logout</title>
+</head>
+<body>
+    <h1>Logout</h1>
+    <p>You have successfully logged out.</p>
+    <p>To log in again, click <a href="login.html">here</a>.</p>
+</body>
+</html>
+
+
+sessionExpired.html
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Session Expired</title>
+</head>
+<body>
+    <h1>Session Expired</h1>
+    <p>Your session has expired. Please click <a href="login.html">here</a> to log in again.</p>
+</body>
+</html>

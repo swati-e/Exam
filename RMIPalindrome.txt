@@ -1,0 +1,63 @@
+Client
+
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+public class PalindromeClient {
+
+    public static void main(String[] args) {
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost");
+            PalindromeService palindromeService = (PalindromeService) registry.lookup("PalindromeService");
+
+            String word = "level";
+            boolean isPalindrome = palindromeService.isPalindrome(word);
+
+            System.out.println("Is '" + word + "' a palindrome? " + isPalindrome);
+        } catch (Exception e) {
+            System.err.println("Palindrome Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+
+
+Server
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+
+public class PalindromeServer implements PalindromeService {
+
+    public PalindromeServer() {}
+
+    public boolean isPalindrome(String word) throws RemoteException {
+        String reversed = new StringBuilder(word).reverse().toString();
+        return word.equalsIgnoreCase(reversed);
+    }
+
+    public static void main(String[] args) {
+        try {
+            PalindromeServer server = new PalindromeServer();
+            PalindromeService stub = (PalindromeService) UnicastRemoteObject.exportObject(server, 0);
+
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.bind("PalindromeService", stub);
+
+            System.out.println("Palindrome Server is ready.");
+        } catch (Exception e) {
+            System.err.println("Palindrome Server exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+
+
+Interface
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface PalindromeService extends Remote {
+    boolean isPalindrome(String word) throws RemoteException;
+}

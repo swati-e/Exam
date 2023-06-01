@@ -1,0 +1,73 @@
+Server
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+
+public class FactorialServer implements FactorialService {
+
+    public FactorialServer() {}
+
+    public int calculateFactorial(int number) throws RemoteException {
+        if (number == 0 || number == 1) {
+            return 1;
+        } else {
+            int factorial = 1;
+            for (int i = 2; i <= number; i++) {
+                factorial *= i;
+            }
+            return factorial;
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            FactorialServer server = new FactorialServer();
+            FactorialService stub = (FactorialService) UnicastRemoteObject.exportObject(server, 0);
+
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.bind("FactorialService", stub);
+
+            System.out.println("Factorial Server is ready.");
+        } catch (Exception e) {
+            System.err.println("Factorial Server exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+
+
+Client
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Scanner;
+
+public class FactorialClient {
+
+    public static void main(String[] args) {
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost");
+            FactorialService factorialService = (FactorialService) registry.lookup("FactorialService");
+
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Enter a number: ");
+            int number = scanner.nextInt();
+
+            int factorial = factorialService.calculateFactorial(number);
+            System.out.println("Factorial of " + number + " is: " + factorial);
+        } catch (Exception e) {
+            System.err.println("Factorial Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+
+
+Interface
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface FactorialService extends Remote {
+    int calculateFactorial(int number) throws RemoteException;
+}

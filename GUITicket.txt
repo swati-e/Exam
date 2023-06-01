@@ -1,0 +1,72 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class TicketBookingGUI {
+    private JFrame frame;
+    private JTextField nameField;
+    private JTextField ageField;
+    private JButton bookButton;
+
+    public TicketBookingGUI() {
+        createAndShowGUI();
+    }
+
+    private void createAndShowGUI() {
+        // Create the main frame
+        frame = new JFrame("Ticket Booking");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 200);
+        frame.setLayout(new FlowLayout());
+
+        // Create and configure the components
+        JLabel nameLabel = new JLabel("Name:");
+        nameField = new JTextField(15);
+        JLabel ageLabel = new JLabel("Age:");
+        ageField = new JTextField(15);
+        bookButton = new JButton("Book Ticket");
+
+        // Add the components to the frame
+        frame.add(nameLabel);
+        frame.add(nameField);
+        frame.add(ageLabel);
+        frame.add(ageField);
+        frame.add(bookButton);
+
+        // Add action listener to the bookButton
+        bookButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String age = ageField.getText();
+
+                // Calculate ticket amount (a simple calculation for demonstration)
+                int ticketAmount = Integer.parseInt(age) * 10;
+
+                // Display ticket information dialog box
+                showTicketDialog(name, ticketAmount);
+            }
+        });
+
+        // Set frame properties and display it
+        frame.setVisible(true);
+    }
+
+    private void showTicketDialog(String name, int ticketAmount) {
+        JFrame ticketFrame = new JFrame("Ticket Information");
+        ticketFrame.setSize(300, 150);
+        ticketFrame.setLayout(new GridLayout(2, 1));
+
+        JLabel nameLabel = new JLabel("Name: " + name);
+        JLabel amountLabel = new JLabel("Ticket Amount: $" + ticketAmount);
+
+        ticketFrame.add(nameLabel);
+        ticketFrame.add(amountLabel);
+
+        ticketFrame.setVisible(true);
+    }
+
+
+    public static void main(String[] args) {
+        new TicketBookingGUI();
+    }
+}

@@ -1,0 +1,55 @@
+import java.awt.*;
+import java.awt.event.*;
+
+@SuppressWarnings("serial")
+public class Pract_2 extends Frame implements MouseListener {
+    Label l;
+
+    Pract_2() {
+        super("AWT Frame");
+        l = new Label();
+        l.setBounds(25, 60, 250, 30);
+        l.setAlignment(Label.CENTER);
+        this.add(l);
+        this.setSize(300, 300);
+        this.setLayout(null);
+        this.setVisible(true);
+        this.addMouseListener(this);
+      
+    
+    }
+
+    public static void main(String[] args) {
+        new Pract_2();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        l.setText("Mouse Clicked");
+        this.setBackground(new Color(255, 255, 153)); // Light yellow
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        l.setText("Mouse Pressed");
+        this.setBackground(new Color(204, 255, 204)); // Light green
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        l.setText("Mouse Released");
+        this.setBackground(new Color(255, 204, 204)); // Light red
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        l.setText("Mouse Entered");
+        this.setBackground(new Color(204, 229, 255)); // Light blue
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        l.setText("Mouse Exited");
+        this.setBackground(new Color(255, 204, 229)); // Light pink
+    }
+}

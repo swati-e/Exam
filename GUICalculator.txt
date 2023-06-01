@@ -1,0 +1,88 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.math.BigInteger;
+
+public class CalculatorGUI extends JFrame {
+    private JTextField num1Field;
+    private JTextField num2Field;
+    private JButton calculateButton;
+
+    public CalculatorGUI() {
+        setTitle("Calculator");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLayout(new FlowLayout());
+
+        // Create labels
+        JLabel num1Label = new JLabel("Number 1:");
+        JLabel num2Label = new JLabel("Number 2:");
+
+        // Create text fields
+        num1Field = new JTextField(10);
+        num2Field = new JTextField(10);
+
+        // Create button
+        calculateButton = new JButton("Calculate");
+
+        // Add components to the frame
+        add(num1Label);
+        add(num1Field);
+        add(num2Label);
+        add(num2Field);
+        add(calculateButton);
+
+        // Register event listener for the calculateButton
+        calculateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Retrieve number values from text fields
+                int num1 = Integer.parseInt(num1Field.getText());
+                int num2 = Integer.parseInt(num2Field.getText());
+
+                // Calculate factorial
+                BigInteger factorial1 = calculateFactorial(num1);
+                BigInteger factorial2 = calculateFactorial(num2);
+
+                // Perform calculations
+                int addition = num1 + num2;
+                int subtraction = num1 - num2;
+                int multiplication = num1 * num2;
+                double division = (double) num1 / num2;
+
+                // Build the result message
+                StringBuilder resultMessage = new StringBuilder();
+                resultMessage.append("Factorial of Number 1: ").append(factorial1).append("\n");
+                resultMessage.append("Factorial of Number 2: ").append(factorial2).append("\n");
+                resultMessage.append("Addition: ").append(addition).append("\n");
+                resultMessage.append("Subtraction: ").append(subtraction).append("\n");
+                resultMessage.append("Multiplication: ").append(multiplication).append("\n");
+                resultMessage.append("Division: ").append(division);
+
+                // Display the result in a separate dialog window
+                JOptionPane.showMessageDialog(null, resultMessage.toString(), "Calculation Results",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        pack();
+        setLocationRelativeTo(null); // Center the frame on the screen
+        setVisible(true);
+    }
+
+    // Calculate factorial of a number using BigInteger
+    private BigInteger calculateFactorial(int number) {
+        BigInteger factorial = BigInteger.ONE;
+        for (int i = 2; i <= number; i++) {
+            factorial = factorial.multiply(BigInteger.valueOf(i));
+        }
+        return factorial;
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new CalculatorGUI();
+            }
+        });
+    }
+}

@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+</head>
+<body>
+    <h1>Calculator</h1>
+
+    <form action="CalculatorServlet" method="post">
+        <input type="number" name="num1" required>
+        <select name="operator" required>
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+            <option value="multiply">Multiply</option>
+            <option value="divide">Divide</option>
+        </select>
+        <input type="number" name="num2" required>
+        <button type="submit">Calculate</button>
+    </form>
+
+    <h2>Result: ${result}</h2>
+</body>
+</html>
+
+
+
+
+package abc.com;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class CalculatorServlet
+ */
+@WebServlet("/CalculatorServlet")
+public class CalculatorServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CalculatorServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Retrieve the input values from the request parameters
+        int num1 = Integer.parseInt(request.getParameter("num1"));
+        int num2 = Integer.parseInt(request.getParameter("num2"));
+        String operator = request.getParameter("operator");
+
+        // Perform the calculation based on the operator
+        int result = 0;
+        switch (operator) {
+            case "add":
+                result = num1 + num2;
+                break;
+            case "subtract":
+                result = num1 - num2;
+                break;
+            case "multiply":
+                result = num1 * num2;
+                break;
+            case "divide":
+                if (num2 != 0) {
+                    result = num1 / num2;
+                }
+                break;
+        }
+
+        // Set the result as an attribute to be displayed in the JSP
+        request.setAttribute("result", result);
+
+        // Forward the request to the calculator.jsp page for displaying the result
+        request.getRequestDispatcher("calculator.jsp").forward(request, response);
+    }
+
+}

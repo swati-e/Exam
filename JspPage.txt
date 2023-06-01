@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Greeting Page</title>
+</head>
+<body>
+    <h1>Happy Advanced JAVA learning</h1>
+
+    <form method="post" action="greeting.jsp">
+        <label for="name">Enter your name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <%
+        String name = request.getParameter("name");
+        if (name != null) {
+            out.println("<h2>Welcome, " + name + "!</h2>");
+        }
+    %>
+</body>
+</html>

@@ -1,0 +1,109 @@
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.Scanner;
+
+public class CalculatorClient {
+
+    public static void main(String[] args) {
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost");
+            CalculatorService calculatorService = (CalculatorService) registry.lookup("CalculatorService");
+
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Enter the first number: ");
+            double num1 = scanner.nextDouble();
+
+            System.out.print("Enter the second number: ");
+            double num2 = scanner.nextDouble();
+
+            System.out.println("Select an operation:");
+            System.out.println("1. Add");
+            System.out.println("2. Subtract");
+            System.out.println("3. Multiply");
+            System.out.println("4. Divide");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            double result;
+            switch (choice) {
+                case 1:
+                    result = calculatorService.add(num1, num2);
+                    System.out.println("Result: " + result);
+                    break;
+                case 2:
+                    result = calculatorService.subtract(num1, num2);
+                    System.out.println("Result: " + result);
+                    break;
+                case 3:
+                    result = calculatorService.multiply(num1, num2);
+                    System.out.println("Result: " + result);
+                    break;
+                case 4:
+                    result = calculatorService.divide(num1, num2);
+                    System.out.println("Result: " + result);
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        } catch (Exception e) {
+            System.err.println("Calculator Client exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+
+Server
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+
+public class CalculatorServer implements CalculatorService {
+
+    public CalculatorServer() {}
+
+    public double add(double a, double b) throws RemoteException {
+        return a + b;
+    }
+
+    public double subtract(double a, double b) throws RemoteException {
+        return a - b;
+    }
+
+    public double multiply(double a, double b) throws RemoteException {
+        return a * b;
+    }
+
+    public double divide(double a, double b) throws RemoteException {
+        return a / b;
+    }
+
+    public static void main(String[] args) {
+        try {
+            CalculatorServer server = new CalculatorServer();
+            CalculatorService stub = (CalculatorService) UnicastRemoteObject.exportObject(server, 0);
+
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.bind("CalculatorService", stub);
+
+            System.out.println("Calculator Server is ready.");
+        } catch (Exception e) {
+            System.err.println("Calculator Server exception: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+
+Interface
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface CalculatorService extends Remote {
+    double add(double a, double b) throws RemoteException;
+    double subtract(double a, double b) throws RemoteException;
+    double multiply(double a, double b) throws RemoteException;
+    double divide(double a, double b) throws RemoteException;
+}
+

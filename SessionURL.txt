@@ -1,0 +1,58 @@
+index.html:
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+<body>
+    Welcome to servlet redirect example
+    <br>
+    <br>
+    <form action="FormController" method="get">
+        Email: <input type="text" name="email"> <br>
+        User Name: <input type="text" name="uname"> <br>
+        <input type="submit" value="Submit"> <input type="reset">
+    </form>
+</body>
+</html>
+
+
+FormController servlet (FormController.java):
+package com.example.servlets;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/FormController")
+public class FormController extends HttpServlet {
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        String username = request.getParameter("uname");
+
+        response.sendRedirect("success.html");
+    }
+}
+
+
+success.html:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+<body>
+    <h1>Welcome ..</h1><br>
+    <h3>Your form has been submitted and successfully redirected to the success.html page</h3>
+</body>
+</html>
